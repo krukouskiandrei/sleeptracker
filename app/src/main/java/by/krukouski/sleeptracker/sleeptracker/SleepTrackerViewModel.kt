@@ -1,8 +1,6 @@
 package by.krukouski.sleeptracker.sleeptracker
 
 import android.app.Application
-import android.provider.SyncStateContract.Helpers.insert
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,7 +25,7 @@ class SleepTrackerViewModel(
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private var tonight = MutableLiveData<SleepNight?>()
-    private val nights = database.getAllNights()
+    val nights = database.getAllNights()
     val nightsString = Transformations.map(nights) { nights ->
         formatNights(nights, application.resources)
     }
@@ -95,8 +93,7 @@ class SleepTrackerViewModel(
     }
 
     fun onStopTracking() {
-        Log.i("SleepTrackerViewMOdel","From onStopTracking Method")
-        uiScope.launch {
+       uiScope.launch {
             val oldNight = tonight.value ?: return@launch
 
             oldNight.endTimeMilli = System.currentTimeMillis()
@@ -124,4 +121,17 @@ class SleepTrackerViewModel(
             database.clear()
         }
     }
+
+    private val _navigateToSleepDataQuality = MutableLiveData<Long>()
+    val navigateToSleepDataQuality
+        get() = _navigateToSleepDataQuality
+
+    fun onSleepNightClicked(id: Long){
+        _navigateToSleepDataQuality.value = id
+    }
+
+    fun onSleepDataQualityNavigated() {
+        _navigateToSleepDataQuality.value = null
+    }
+
 }

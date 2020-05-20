@@ -1,6 +1,5 @@
 package by.krukouski.sleeptracker.sleepquality
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,7 +25,6 @@ class SleepQualityViewModel(
     }
 
     fun onSetSleepQuality(quality : Int) {
-        Log.i("SleepQualityViewModel","From onSetSleepQuality mehtod")
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 val tonight = database.get(sleepNightKey) ?: return@withContext
